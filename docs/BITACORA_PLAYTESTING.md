@@ -8,14 +8,14 @@ se abre con `?legacy=1`; la versión final se abre con `?legacy=0`.
 
 ### Corrida 1
 
-- Fecha y hora:
-- Duración:
-- ¿Llegó al jefe final?:
-- Problemas de movimiento o disparo:
-- Problemas de interfaz:
-- Problemas visuales o de audio:
-- Bug reproducible y pasos:
-- Mejora prioritaria:
+- Fecha y hora: 23/07/2026
+- Duración: 10 minutos
+- ¿Llegó al jefe final?: si
+- Problemas de movimiento o disparo: ninguno
+- Problemas de interfaz: la interfaz de la vida del segundo jugador tiene problemas
+- Problemas visuales o de audio: la oritencion de los estado de salud y en general del jugador dos
+- Bug reproducible y pasos: nop ningun bug
+- Mejora prioritaria: la mejor de la interfaz
 
 ### Corrida 2
 
