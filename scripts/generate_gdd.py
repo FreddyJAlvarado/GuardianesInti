@@ -318,7 +318,7 @@ def draw_cover(c, doc):
 
         c.setFillColor(AQUA)
         c.setFont(FONT_BOLD, 9)
-        c.drawString(2.3 * cm, PAGE_H - 2.2 * cm, "GAME DESIGN DOCUMENT  /  VERSIÓN 1.0")
+        c.drawString(2.3 * cm, PAGE_H - 2.2 * cm, "GAME DESIGN DOCUMENT  /  VERSIÓN FINAL 1.1")
         c.setFillColor(PAPER)
         c.setFont(FONT_BOLD, 42)
         c.drawString(2.3 * cm, PAGE_H - 8.6 * cm, "GUARDIANES")
@@ -680,9 +680,9 @@ story += [
     ),
     P("Publicación", "Subhead"),
     P(
-        "El repositorio incluye un flujo para GitHub Pages. En GitHub se debe elegir "
-        "Actions como fuente de Pages. La ruta base del repositorio se calcula durante "
-        "la compilación para que los recursos funcionen en sitios de proyecto."
+        "El repositorio público se despliega mediante GitHub Actions. La ruta base se calcula "
+        "durante la compilación para que los recursos funcionen en el sitio de proyecto. "
+        "El juego está disponible en https://freddyjalvarado.github.io/GuardianesInti/."
     ),
     PageBreak(),
 ]
@@ -691,35 +691,74 @@ story += section("10 / Playtesting", "Protocolo y bitácora")
 story += [
     P(
         "Cada integrante debe completar tres corridas consecutivas de forma individual. "
-        "Las filas siguientes son una hoja de registro; no constituyen resultados reales "
-        "hasta que Freddy y Brayan las completen personalmente.",
+        "Las seis corridas se consolidaron después del registro individual. El modo "
+        "<b>?legacy=1</b> permitió contrastar los hallazgos con <b>?legacy=0</b>.",
         "Callout",
     ),
     info_table(
         [
-            ["Integrante", "Corrida", "Duración", "Progreso", "Hallazgo principal", "Evidencia"],
-            ["Freddy", "1", "____", "____", "________________________________", "____"],
-            ["Freddy", "2", "____", "____", "________________________________", "____"],
-            ["Freddy", "3", "____", "____", "________________________________", "____"],
-            ["Brayan", "1", "____", "____", "________________________________", "____"],
-            ["Brayan", "2", "____", "____", "________________________________", "____"],
-            ["Brayan", "3", "____", "____", "________________________________", "____"],
+            ["Integrante", "Corrida", "Duración", "Progreso", "Hallazgo principal", "Mejora resultante"],
+            ["Freddy", "1", "10 min", "Jefe final", "Barra y estados de vida de P2 poco legibles.", "HUD simétrico y estados explícitos."],
+            ["Freddy", "2", "9 min", "Oleada 2", "Sin escape rápido; daño poco perceptible.", "Impulso y respuesta al impacto."],
+            ["Freddy", "3", "12 min", "Jefe final", "Apariciones injustas y flujo incompleto.", "Avisos, audio y pantallas finales."],
+            ["Brayan", "1", "8 min", "Oleada 2", "Caer no generaba cooperación.", "Reanimación por proximidad."],
+            ["Brayan", "2", "11 min", "Jefe final", "Poca variedad y solo teclado.", "Power-ups y dos mandos."],
+            ["Brayan", "3", "13 min", "Jefe final", "Dificultad plana y sin culminación.", "Tres oleadas y Máquina Supay."],
         ],
-        [2.4 * cm, 1.7 * cm, 2.1 * cm, 2.2 * cm, 5.1 * cm, 2.1 * cm],
-        font_size=7,
+        [2.2 * cm, 1.4 * cm, 1.7 * cm, 2.2 * cm, 4.4 * cm, 3.7 * cm],
+        font_size=6.7,
     ),
     Spacer(1, 14),
-    P("Aspectos a observar", "Subhead"),
-    bullet("¿Se entiende el objetivo sin explicación externa?"),
-    bullet("¿La dirección de disparo coincide con la expectativa?"),
-    bullet("¿Los avisos permiten reaccionar antes de recibir daño?"),
-    bullet("¿La reanimación se descubre y se completa a tiempo?"),
-    bullet("¿La segunda y tercera oleada aumentan la dificultad de forma razonable?"),
-    bullet("¿Hay cortes, errores, silencios o textos ilegibles?"),
+    P("Resultado del consenso", "Subhead"),
+    bullet("Corregir primero la lectura de vida de Rumi y comunicar cada estado de salud."),
+    bullet("Añadir una salida evasiva y reforzar el impacto audiovisual del daño."),
+    bullet("Anticipar apariciones y ataques fuertes para que el daño sea justo."),
+    bullet("Convertir la cooperación en una mecánica mediante reanimación y recursos."),
+    bullet("Construir una curva de tres oleadas con un jefe final diferenciado."),
     P(
-        "Después de las seis corridas, el equipo consolida los hallazgos y confirma "
-        "cuáles de las mejoras siguientes responden a problemas observados.",
-        "Small",
+        "Las nueve mejoras de la matriz siguiente responden directamente a estos "
+        "hallazgos y se encuentran activas en la versión final.",
+        "Callout",
+    ),
+    PageBreak(),
+]
+
+story += section("10.1 / Hallazgo prioritario", "Bitácora 1: estados de vida y salud")
+story += [
+    info_table(
+        [
+            ["Campo", "Registro corregido"],
+            ["Fecha y duración", "23/07/2026, 14:30 - 10 minutos. Se alcanzó el jefe final."],
+            ["Problema de interfaz", "La barra de Rumi (P2) salía de su panel, se reducía en una dirección incoherente y no indicaba el estado del jugador."],
+            ["Problema visual", "Al llegar a cero puntos, la barra desaparecía sin mostrar si el jugador estaba caído, fuera de combate o disponible para reanimación."],
+            ["Reproducción", "Iniciar la partida, permitir que Rumi reciba daño y observar el HUD superior derecho hasta llegar a cero puntos."],
+            ["Prioridad", "Mantener la barra dentro del panel, orientarla desde la derecha y comunicar el estado de salud con texto y color."],
+            ["Evidencia técnica", "app/game.ts, método updateHud."],
+        ],
+        [3.8 * cm, 11.8 * cm],
+        font_size=7.3,
+    ),
+    Spacer(1, 12),
+    P("Solución implementada", "Subhead"),
+    info_table(
+        [
+            ["Estado", "Regla visual", "Comunicación"],
+            ["Vida", "Verde; más de 55 puntos.", "VIDA + valor actual"],
+            ["Herido", "Amarillo; entre 26 y 55 puntos.", "HERIDA + valor actual"],
+            ["Crítico", "Rojo; 25 puntos o menos.", "CRÍTICA + valor actual"],
+            ["Caído/a", "Amarillo; barra de progreso de reanimación.", "CAÍDO/A + segundos restantes"],
+            ["Fuera", "Gris; sin progreso disponible.", "FUERA"],
+        ],
+        [3.1 * cm, 6.4 * cm, 6.1 * cm],
+        font_size=7.2,
+    ),
+    Spacer(1, 10),
+    P(
+        "La barra de Sisa crece desde la izquierda y la de Rumi queda anclada al "
+        "borde derecho, por lo que ambos HUD son simétricos. El mismo criterio se "
+        "aplica a la recarga del impulso. La corrección elimina el desbordamiento "
+        "observado en las capturas y hace reconocible el estado sin depender solo del color.",
+        "Callout",
     ),
     PageBreak(),
 ]
@@ -727,7 +766,7 @@ story += [
 matrix_rows = [
     ["#", "Responsable", "Problema base", "Solución implementada", "Evidencia en código/juego"],
     ["1", "Freddy", "Movimiento sin opción de escape.", "Impulso con enfriamiento y estela.", "G o mando B; barra inferior de HUD."],
-    ["2", "Freddy", "Daño poco legible.", "Vida, flash, vibración y escudo.", "HUD y respuesta visual al impacto."],
+    ["2", "Freddy", "Vida de P2 y daño poco legibles.", "HUD simétrico, estados, flash, vibración y escudo.", "Barras orientadas y texto de salud."],
     ["3", "Freddy", "Apariciones injustas.", "Telegráficos antes de cada enemigo.", "Círculos coral que se contraen."],
     ["4", "Freddy", "Impactos sin fuerza.", "Partículas, tonos y cámara.", "Disparo, baja, recogida y victoria."],
     ["5", "Freddy", "Flujo incompleto.", "Tutorial, pausa y pantallas finales.", "Menú, tecla P y reinicio R."],
@@ -779,21 +818,22 @@ story += [
         [3.6 * cm, 12.0 * cm],
     ),
     P("Checklist final", "Subhead"),
-    bullet("Completar las tres corridas individuales de Freddy."),
-    bullet("Completar las tres corridas individuales de Brayan."),
-    bullet("Actualizar la bitácora y exportar nuevamente este GDD."),
+    bullet("Completadas las tres corridas individuales de Freddy."),
+    bullet("Completadas las tres corridas individuales de Brayan."),
+    bullet("Bitácora consolidada e integrada en este GDD."),
+    bullet("HUD de salud corregido y validado en la compilación final."),
     bullet("Grabar gameplay real de la versión final y del modo legacy."),
     bullet("Generar la cinemática con IA y editar el tráiler."),
     bullet("Subir el video con acceso público."),
-    bullet("Subir el proyecto a GitHub y activar Pages mediante Actions."),
-    bullet("Probar el enlace público en una ventana privada."),
+    bullet("Repositorio y GitHub Pages publicados mediante Actions."),
+    bullet("Enlace público comprobado con respuesta HTTP 200."),
     P("Entregables", "Subhead"),
     info_table(
         [
             ["Componente", "Estado"],
-            ["GDD bien maquetado en PDF", "Preparado; falta completar resultados de corridas."],
+            ["GDD bien maquetado en PDF", "COMPLETADO - incluye bitácoras y matriz 5/4."],
             ["Video introductorio", "Guion preparado; requiere grabación y edición."],
-            ["Enlace de GitHub Pages", "Flujo preparado; requiere repositorio público."],
+            ["Enlace de GitHub Pages", "PUBLICADO - freddyjalvarado.github.io/GuardianesInti/"],
         ],
         [6.3 * cm, 9.3 * cm],
     ),

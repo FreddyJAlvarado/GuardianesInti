@@ -1118,26 +1118,43 @@ export async function createGuardianesGame(
       this.hud.strokeRoundedRect(898, 14, 360, 80, 14);
 
       this.players.forEach((player, index) => {
-        const x = index === 0 ? 78 : 1000;
+        const x = index === 0 ? 78 : 920;
         const width = 282;
-        const hpRatio = player.hp / player.maxHp;
+        const hpRatio = Phaser.Math.Clamp(player.hp / player.maxHp, 0, 1);
+        const healthRatio = player.downed ? player.reviveProgress : hpRatio;
+        const healthWidth = width * healthRatio;
+        const healthX = index === 0 ? x : x + width - healthWidth;
         this.hud.fillStyle(0x183442, 1);
         this.hud.fillRoundedRect(x, 56, width, 12, 6);
         this.hud.fillStyle(
-          hpRatio > 0.55 ? 0x72ef9c : hpRatio > 0.25 ? 0xffc857 : 0xff4d6d,
+          player.eliminated
+            ? 0x627384
+            : player.downed
+              ? 0xffcf52
+              : hpRatio > 0.55
+                ? 0x72ef9c
+                : hpRatio > 0.25
+                  ? 0xffc857
+                  : 0xff4d6d,
           1,
         );
-        this.hud.fillRoundedRect(x, 56, width * hpRatio, 12, 6);
+        if (healthWidth > 0) {
+          this.hud.fillRoundedRect(healthX, 56, healthWidth, 12, 6);
+        }
         if (!legacyMode) {
           const dashRatio = Phaser.Math.Clamp(
             1 - Math.max(0, player.dashReadyAt - time) / 1850,
             0,
             1,
           );
+          const dashWidth = width * dashRatio;
+          const dashX = index === 0 ? x : x + width - dashWidth;
           this.hud.fillStyle(0x183442, 1);
           this.hud.fillRoundedRect(x, 75, width, 5, 3);
           this.hud.fillStyle(player.color, 0.9);
-          this.hud.fillRoundedRect(x, 75, width * dashRatio, 5, 3);
+          if (dashWidth > 0) {
+            this.hud.fillRoundedRect(dashX, 75, dashWidth, 5, 3);
+          }
         }
         if (player.downed) {
           this.hud.lineStyle(4, 0xffcf52, 0.9);
@@ -1153,13 +1170,30 @@ export async function createGuardianesGame(
         }
       });
 
+      const healthState = (player: PlayerState | undefined) => {
+        if (!player) return "VIDA --";
+        if (player.eliminated) return "FUERA";
+        if (player.downed) {
+          const fallen = player.name === "SISA" ? "CAÍDA" : "CAÍDO";
+          return `${fallen} ${Math.max(0, Math.ceil(player.downTimer / 1000))}s`;
+        }
+        const hp = Math.ceil(player.hp);
+        if (hp <= player.maxHp * 0.25) return `CRÍTICA ${hp}`;
+        if (hp <= player.maxHp * 0.55) return `HERIDA ${hp}`;
+        return `VIDA ${hp}`;
+      };
+
       const p1 = this.players[0];
       const p2 = this.players[1];
       this.playerOneText.setText(
-        `P1 · ${p1?.name ?? "SISA"}     ${p1?.score.toString().padStart(5, "0") ?? "00000"}`,
+        `P1 · ${p1?.name ?? "SISA"}  ${healthState(p1)}  ${
+          p1?.score.toString().padStart(5, "0") ?? "00000"
+        }`,
       );
       this.playerTwoText.setText(
-        `${p2?.score.toString().padStart(5, "0") ?? "00000"}     ${p2?.name ?? "RUMI"} · P2`,
+        `${p2?.score.toString().padStart(5, "0") ?? "00000"}  ${
+          healthState(p2)
+        }  ${p2?.name ?? "RUMI"} · P2`,
       );
       if (this.combo > 1 && time < this.comboUntil) {
         this.statusText.setText(`COMBO DE EQUIPO ×${this.combo}`);
