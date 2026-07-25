@@ -793,52 +793,7 @@ story += [
         "partículas, audio y soporte para mandos. Abrir <b>?legacy=0</b> muestra la "
         "versión final. Este recurso permite grabar un antes y después reproducible."
     ),
-    P(
-        "La evaluación individual depende de la guía docente. Antes de entregar, "
-        "cada integrante debe verificar que sus mejoras asignadas funcionan en una "
-        "corrida completa y conservar evidencia en video.",
-        "Callout",
-    ),
-    PageBreak(),
 ]
-
-story += section("12 / Entrega", "Tráiler y lista de verificación")
-story += [
-    P("Tráiler de 1 a 2 minutos", "Subhead"),
-    info_table(
-        [
-            ["Tiempo", "Contenido"],
-            ["0:00 - 0:12", "Cinemática IA del Cotopaxi y el eclipse mecánico."],
-            ["0:12 - 0:22", "Presentación de Sisa, Rumi y el Núcleo del Inti."],
-            ["0:22 - 0:47", "Gameplay real y corte antes/después de mejoras."],
-            ["0:47 - 0:59", "Reanimación y power-ups."],
-            ["0:59 - 1:12", "Máquina Supay y acción final."],
-            ["1:12 - 1:25", "Victoria, logotipo y enlace público."],
-        ],
-        [3.6 * cm, 12.0 * cm],
-    ),
-    P("Checklist final", "Subhead"),
-    bullet("Completadas las tres corridas individuales de Freddy."),
-    bullet("Completadas las tres corridas individuales de Brayan."),
-    bullet("Bitácora consolidada e integrada en este GDD."),
-    bullet("HUD de salud corregido y validado en la compilación final."),
-    bullet("Grabar gameplay real de la versión final y del modo legacy."),
-    bullet("Generar la cinemática con IA y editar el tráiler."),
-    bullet("Subir el video con acceso público."),
-    bullet("Repositorio y GitHub Pages publicados mediante Actions."),
-    bullet("Enlace público comprobado con respuesta HTTP 200."),
-    P("Entregables", "Subhead"),
-    info_table(
-        [
-            ["Componente", "Estado"],
-            ["GDD bien maquetado en PDF", "COMPLETADO - incluye bitácoras y matriz 5/4."],
-            ["Video introductorio", "Guion preparado; requiere grabación y edición."],
-            ["Enlace de GitHub Pages", "PUBLICADO - freddyjalvarado.github.io/GuardianesInti/"],
-        ],
-        [6.3 * cm, 9.3 * cm],
-    ),
-]
-
 
 def build_pdf():
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
